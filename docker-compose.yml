@@ -1,0 +1,11 @@
+version: "3.2"
+service:
+  iotmidtermapi.chutipon.dev:
+    container_name: iotmidtermapi.chutipon.dev
+    image: node:10-alpine
+    volumes:
+      - .:/server
+    command: sh -c 'cd /server && yarn && yarn start:dev'
+    environment:
+      MONGO_CONNECTION_STRING:
+      MQTT_CONNECTION_STRING:
