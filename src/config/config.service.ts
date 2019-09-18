@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class ConfigService {
 
-    public getMongodbConnectionString(): string {
+    public get mongodbConnectionString(): string {
         const connectionString = process.env.MONGO_CONNECTION_STRING;
         if (!connectionString) {
             throw new Error('MONGO_CONNECTION_STRING is not defined');
