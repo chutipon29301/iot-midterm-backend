@@ -1,4 +1,13 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
+import { TrafficLightService } from './traffic-light.service';
 
 @Controller('traffic-light')
-export class TrafficLightController {}
+export class TrafficLightController {
+
+    constructor(private readonly trafficLightService: TrafficLightService) { }
+
+    @Get('/ping-mqtt')
+    public async sendPingMqttMessage() {
+        await this.trafficLightService.sendPingMqttMessage();
+    }
+}
