@@ -2,8 +2,12 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Client, ClientProxy, Transport } from '@nestjs/microservices';
 import { TrafficLight, TrafficLightColor } from '../classes/TrafficLight';
 import { Observable, combineLatest } from 'rxjs';
+import { WebSocketServer, WebSocketGateway, OnGatewayConnection } from '@nestjs/websockets';
+import { Server } from 'socket.io';
+import { onTrafficLightChange } from '../constant';
+@WebSocketGateway()
 @Injectable()
-export class TrafficLightService implements OnModuleInit {
+export class TrafficLightService implements OnModuleInit, OnGatewayConnection {
 
     @Client({
         transport: Transport.MQTT,
@@ -12,6 +16,8 @@ export class TrafficLightService implements OnModuleInit {
         },
     })
     private client: ClientProxy;
+    @WebSocketServer()
+    private server: Server;
     private trafficLights: TrafficLight[] = [
         new TrafficLight(),
         new TrafficLight(),
@@ -23,9 +29,15 @@ export class TrafficLightService implements OnModuleInit {
         this.observableTrafficLightColors.subscribe({
             next: (trafficLightColors: TrafficLightColor[]) => {
                 this.client.emit('traffic-light', trafficLightColors);
+                this.server.emit(onTrafficLightChange, trafficLightColors);
             },
         });
     }
+
+    handleConnection() {
+        this.server.emit(onTrafficLightChange, this.trafficLights.map(o => o.lightSubject.value));
+    }
+
     public changeLightColor(index: number, color: TrafficLightColor) {
         this.trafficLights[index].lightSubject.next(color);
     }
