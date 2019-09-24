@@ -4,7 +4,7 @@ import { TrafficLight, TrafficLightColor } from '../classes/TrafficLight';
 import { Observable, combineLatest } from 'rxjs';
 import { WebSocketServer, WebSocketGateway, OnGatewayConnection } from '@nestjs/websockets';
 import { Server } from 'socket.io';
-import { onTrafficLightChange } from '../constant';
+import { SOCKET_ON_TRAFFIC_LIGHT_CHANGE, MQTT_TRAFFIC_LIGHT_EVENT } from '../constant';
 @WebSocketGateway()
 @Injectable()
 export class TrafficLightService implements OnModuleInit, OnGatewayConnection {
@@ -28,14 +28,20 @@ export class TrafficLightService implements OnModuleInit, OnGatewayConnection {
     onModuleInit() {
         this.observableTrafficLightColors.subscribe({
             next: (trafficLightColors: TrafficLightColor[]) => {
-                this.client.emit('traffic-light', trafficLightColors);
-                this.server.emit(onTrafficLightChange, trafficLightColors);
+                this.client.emit(MQTT_TRAFFIC_LIGHT_EVENT, trafficLightColors);
+                this.server.emit(SOCKET_ON_TRAFFIC_LIGHT_CHANGE, trafficLightColors);
             },
         });
     }
 
     handleConnection() {
-        this.server.emit(onTrafficLightChange, this.trafficLights.map(o => o.lightSubject.value));
+        this.server.emit(SOCKET_ON_TRAFFIC_LIGHT_CHANGE, this.trafficLights.map(o => o.lightSubject.value));
+    }
+
+    public async syncTrafficLightColor() {
+        const lights = this.trafficLights.map(o => o.lightSubject.value);
+        this.server.emit(SOCKET_ON_TRAFFIC_LIGHT_CHANGE, lights);
+        this.client.emit(MQTT_TRAFFIC_LIGHT_EVENT, lights);
     }
 
     public changeLightColor(index: number, color: TrafficLightColor) {

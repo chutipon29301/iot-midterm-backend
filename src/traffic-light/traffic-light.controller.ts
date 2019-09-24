@@ -7,12 +7,17 @@ export class TrafficLightController {
 
     constructor(private readonly trafficLightService: TrafficLightService) { }
 
-    @Post('/change-light/:index')
+    @Get('sync')
+    public async syncTrafficLightColor(){
+        await this.trafficLightService.syncTrafficLightColor();
+    }
+
+    @Post('change-light/:index')
     public async changeTrafficLightColor(@Param('index', new ParseIntPipe()) index: number, @Body() body: ChangeTrafficLightDto) {
         this.trafficLightService.changeLightColor(index, body.color);
     }
 
-    @Get('/ping-mqtt')
+    @Get('ping-mqtt')
     public async sendPingMqttMessage() {
         await this.trafficLightService.sendPingMqttMessage();
     }
