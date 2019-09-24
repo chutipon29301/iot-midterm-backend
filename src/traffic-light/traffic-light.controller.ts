@@ -8,8 +8,9 @@ export class TrafficLightController {
     constructor(private readonly trafficLightService: TrafficLightService) { }
 
     @Get('sync')
-    public async syncTrafficLightColor(){
+    public async syncTrafficLightColor() {
         await this.trafficLightService.syncTrafficLightColor();
+        return { msg: 'OK' };
     }
 
     @Post('change-light/:index')
