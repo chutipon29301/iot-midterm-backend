@@ -10,7 +10,6 @@ export class TrafficLightController {
     @Get('sync')
     public async syncTrafficLightColor() {
         await this.trafficLightService.syncTrafficLightColor();
-        return { msg: 'OK' };
     }
 
     @Post('change-light/:index')
