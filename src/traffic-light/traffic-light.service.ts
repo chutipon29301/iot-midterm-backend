@@ -45,7 +45,7 @@ export class TrafficLightService implements OnModuleInit, OnGatewayConnection {
     }
 
     public changeLightColor(index: number, color: TrafficLightColor) {
-        this.trafficLights[index].lightSubject.next(color);
+        this.trafficLights[index].setLightColor(color);
     }
 
     public async sendPingMqttMessage() {
