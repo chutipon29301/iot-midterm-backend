@@ -35,6 +35,10 @@ export class TrafficLight {
         }
     }
 
+    public setNextColor() {
+        this.setColorIndex((this.colorIndex + 1) % this.colorPresets.length);
+    }
+
     private setColorIndex(index: number) {
         this.colorIndex = index;
         this.activeLightSubject.next(this.colorPresets[index]);

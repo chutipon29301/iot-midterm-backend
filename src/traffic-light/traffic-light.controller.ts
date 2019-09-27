@@ -17,6 +17,10 @@ export class TrafficLightController {
         this.trafficLightService.changeLightColor(index, body.color);
     }
 
+    @Post('next-color/:index')
+    public async nextTrafficLightColor(@Param('index', new ParseIntPipe()) index: number) {
+        this.trafficLightService.setNextColorOnIndex(index);
+    }
 
     @Post('change-ir-state/:index')
     public async changeIRState(@Param('index', new ParseIntPipe()) index: number, @Body() body: ChangeIRStateDto) {
