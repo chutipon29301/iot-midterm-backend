@@ -1,7 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Client, ClientProxy, Transport } from '@nestjs/microservices';
 import { TrafficLight, TrafficLightColor } from '../classes/TrafficLight';
-import { Observable, combineLatest } from 'rxjs';
+import { Observable, combineLatest, BehaviorSubject } from 'rxjs';
 import { WebSocketServer, WebSocketGateway, OnGatewayConnection } from '@nestjs/websockets';
 import { Server } from 'socket.io';
 import { SOCKET_ON_TRAFFIC_LIGHT_CHANGE, MQTT_TRAFFIC_LIGHT_EVENT } from '../constant';
@@ -23,6 +23,10 @@ export class TrafficLightService implements OnModuleInit, OnGatewayConnection {
         new TrafficLight(),
         new TrafficLight(),
         new TrafficLight(),
+    ];
+    private irStates: Array<BehaviorSubject<boolean>> = [
+        new BehaviorSubject(false),
+        new BehaviorSubject(false),
     ];
 
     onModuleInit() {
@@ -46,6 +50,14 @@ export class TrafficLightService implements OnModuleInit, OnGatewayConnection {
 
     public changeLightColor(index: number, color: TrafficLightColor) {
         this.trafficLights[index].setLightColor(color);
+    }
+
+    public setNextColorOnIndex(index: number) {
+        this.trafficLights[index].setNextColor();
+    }
+
+    public changeIRState(index: number, state: number) {
+        this.irStates[index].next(state === 1);
     }
 
     public async sendPingMqttMessage() {
