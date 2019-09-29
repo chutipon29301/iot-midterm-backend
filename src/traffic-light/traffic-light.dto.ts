@@ -1,4 +1,5 @@
 import { TrafficLightColor } from '../classes/TrafficLight';
+import { TrafficLightSystemMode } from './traffic-light.service';
 
 export class ChangeTrafficLightDto {
     color: TrafficLightColor;
@@ -12,4 +13,9 @@ export class ChangeIRStateDto {
 // tslint:disable-next-line: max-classes-per-file
 export class TrafficLightCountdownDto {
     countdown: string;
+}
+
+// tslint:disable-next-line: max-classes-per-file
+export class ChangeTrafficLightSystemModeDto {
+    mode: TrafficLightSystemMode;
 }

@@ -4,8 +4,19 @@ import { TrafficLight, TrafficLightColor } from '../classes/TrafficLight';
 import { Observable, combineLatest, BehaviorSubject, interval } from 'rxjs';
 import { WebSocketServer, WebSocketGateway, OnGatewayConnection } from '@nestjs/websockets';
 import { Server } from 'socket.io';
-import { SOCKET_ON_TRAFFIC_LIGHT_CHANGE, MQTT_TRAFFIC_LIGHT_EVENT, SOCKET_ON_IR_SENSOR_CHANGE, SOCKET_ON_COUNTER_CHANGE } from '../constant';
+import {
+    SOCKET_ON_TRAFFIC_LIGHT_CHANGE,
+    MQTT_TRAFFIC_LIGHT_EVENT,
+    SOCKET_ON_IR_SENSOR_CHANGE,
+    SOCKET_ON_COUNTER_CHANGE,
+} from '../constant';
 import { auditTime } from 'rxjs/operators';
+
+export enum TrafficLightSystemMode {
+    AUTO = 'AUTO',
+    MANUAL = 'MANUAL',
+    SENSOR = 'SENSOR',
+}
 @WebSocketGateway()
 @Injectable()
 export class TrafficLightService implements OnModuleInit, OnGatewayConnection {
@@ -31,6 +42,7 @@ export class TrafficLightService implements OnModuleInit, OnGatewayConnection {
         new BehaviorSubject(false),
         new BehaviorSubject(false),
     ];
+    private mode: BehaviorSubject<TrafficLightSystemMode> = new BehaviorSubject<TrafficLightSystemMode>(TrafficLightSystemMode.MANUAL);
 
     private get observableTrafficLightColors(): Observable<TrafficLightColor[]> {
         return combineLatest(this.trafficLights.map(o => o.activeLight));
@@ -63,10 +75,30 @@ export class TrafficLightService implements OnModuleInit, OnGatewayConnection {
                 this.server.emit(SOCKET_ON_COUNTER_CHANGE, countdowns);
             },
         });
+        this.mode.subscribe({
+            next: (mode: TrafficLightSystemMode) => {
+                switch (mode) {
+                    case TrafficLightSystemMode.MANUAL:
+                        for (const trafficLight of this.trafficLights) {
+                            trafficLight.reset();
+                        }
+                        break;
+                    case TrafficLightSystemMode.AUTO:
+                        break;
+                    case TrafficLightSystemMode.SENSOR:
+                        break;
+                }
+            },
+        });
     }
 
     handleConnection() {
         this.server.emit(SOCKET_ON_TRAFFIC_LIGHT_CHANGE, this.trafficLights.map(o => o.lightSubject.value));
+        this.server.emit(SOCKET_ON_IR_SENSOR_CHANGE, this.irStates.map(o => o.value));
+    }
+
+    public setTrafficLightSystemMode(mode: TrafficLightSystemMode) {
+        this.mode.next(mode);
     }
 
     public async syncTrafficLightColor() {

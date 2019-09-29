@@ -15,9 +15,7 @@ export class TrafficLight {
     private colorPresets: TrafficLightColor[] = [TrafficLightColor.GREEN, TrafficLightColor.YELLOW, TrafficLightColor.RED];
     private colorIndex: number = 2;
 
-    constructor(private readonly counter: Observable<number>) {
-
-    }
+    constructor(private readonly counter: Observable<number>) { }
 
     public get lightSubject(): BehaviorSubject<TrafficLightColor> {
         return this.activeLightSubject;
@@ -103,6 +101,13 @@ export class TrafficLight {
         } else {
             this.changeColorCountdown.push(...countdown);
         }
+    }
+
+    public reset() {
+        this.countdown = -1;
+        this.changeColorCountdown = [];
+        this.colorIndex = 2;
+        this.activeLightSubject.next(TrafficLightColor.RED);
     }
 
     private calculateChangeTime(destinationColor: TrafficLightColor): number {

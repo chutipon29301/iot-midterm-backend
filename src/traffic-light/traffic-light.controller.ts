@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param, ParseIntPipe } from '@nestjs/common';
 import { TrafficLightService } from './traffic-light.service';
-import { ChangeTrafficLightDto, ChangeIRStateDto, TrafficLightCountdownDto } from './traffic-light.dto';
+import { ChangeTrafficLightDto, ChangeIRStateDto, TrafficLightCountdownDto, ChangeTrafficLightSystemModeDto } from './traffic-light.dto';
 
 @Controller('traffic-light')
 export class TrafficLightController {
@@ -10,6 +10,11 @@ export class TrafficLightController {
     @Get('sync')
     public async syncTrafficLightColor() {
         await this.trafficLightService.syncTrafficLightColor();
+    }
+
+    @Post('mode')
+    public setTrafficLightMode(@Body() body: ChangeTrafficLightSystemModeDto) {
+        this.trafficLightService.setTrafficLightSystemMode(body.mode);
     }
 
     @Post('change-light/:index')
@@ -41,4 +46,5 @@ export class TrafficLightController {
     public setTrafficLightColorToGreen(@Param('index', new ParseIntPipe()) index: number) {
         this.trafficLightService.setTrafficLightSetToGreenOnIndex(index);
     }
+
 }
