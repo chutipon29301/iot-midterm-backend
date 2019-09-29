@@ -30,11 +30,15 @@ export class TrafficLight {
     public get observableCountdown(): Observable<number> {
         return this.counter.pipe(
             map(() => {
-                if (this.countdown === 0) {
-                    this.setNextColor();
+                if (this.countdown > -1) {
+                    this.countdown--;
+                    if (this.countdown === 0) {
+                        this.setNextColor();
+                        this.countdown--;
+                    }
                 }
                 if (this.countdown > -1) {
-                    return this.countdown--;
+                    return this.countdown;
                 } else {
                     if (this.changeColorCountdown.length > 0) {
                         this.countdown = this.changeColorCountdown[0];
@@ -80,7 +84,7 @@ export class TrafficLight {
                 this.addCountdownQueue(3);
                 break;
             case 2:
-                this.addCountdownQueue([0, 3]);
+                this.addCountdownQueue([5, 3]);
                 break;
         }
     }
@@ -88,7 +92,7 @@ export class TrafficLight {
     public setColorToGreen() {
         switch (this.calculateChangeTime(TrafficLightColor.GREEN)) {
             case 1:
-                this.addCountdownQueue(6);
+                this.addCountdownQueue(11);
                 break;
         }
     }
