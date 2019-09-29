@@ -37,13 +37,8 @@ export class TrafficLightController {
         this.trafficLightService.setTrafficLightColorToRedOnIndex(index);
     }
 
-    // @Post('circulate-to-red/:index')
-    // public async circulateTrafficAtIndexToRed(@Param('index', new ParseIntPipe()) index: number) {
-    //     this.trafficLightService.circulateToRedLightOnIndex(index);
-    // }
-
-    // @Post('set-green-light/:index')
-    // public async setGreenTrafficLightColor(@Param('index', new ParseIntPipe()) index: number) {
-    //     this.trafficLightService.setGreenLightOnIndex(index);
-    // }
+    @Post('set-green/:index')
+    public setTrafficLightColorToGreen(@Param('index', new ParseIntPipe()) index: number) {
+        this.trafficLightService.setTrafficLightSetToGreenOnIndex(index);
+    }
 }

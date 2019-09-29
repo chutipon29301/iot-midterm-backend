@@ -85,6 +85,14 @@ export class TrafficLight {
         }
     }
 
+    public setColorToGreen() {
+        switch (this.calculateChangeTime(TrafficLightColor.GREEN)) {
+            case 1:
+                this.addCountdownQueue(6);
+                break;
+        }
+    }
+
     public addCountdownQueue(countdown: number | number[]) {
         if (typeof countdown === 'number') {
             this.changeColorCountdown.push(countdown);

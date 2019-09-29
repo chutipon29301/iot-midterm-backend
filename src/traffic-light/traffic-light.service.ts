@@ -95,20 +95,14 @@ export class TrafficLightService implements OnModuleInit, OnGatewayConnection {
         this.trafficLights[index].setColorToRed();
     }
 
-    // public setGreenLightOnIndex(index: number) {
-    //     for (let i = 0; i < this.trafficLights.length; i++) {
-    //         if (i === index) {
-    //             setTimeout(() => {
-    //                 this.trafficLights[i].setLightColor(TrafficLightColor.GREEN);
-    //             }, 6000);
-    //         } else {
-    //             this.circulateToRedLightOnIndex(i);
-    //         }
-    //     }
-    // }
-
-    // public circulateToRedLightOnIndex(index: number) {
-    //     this.trafficLights[index].circulateToRed();
-    // }
+    public setTrafficLightSetToGreenOnIndex(index: number) {
+        for (let i = 0; i < this.trafficLights.length; i++) {
+            if (i === index) {
+                this.trafficLights[i].setColorToGreen();
+            } else {
+                this.trafficLights[i].setColorToRed();
+            }
+        }
+    }
 
 }
