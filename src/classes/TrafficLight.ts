@@ -13,7 +13,7 @@ export class TrafficLight {
     private countdown: number = -1;
     private changeColorCountdown: number[] = [];
     private colorPresets: TrafficLightColor[] = [TrafficLightColor.GREEN, TrafficLightColor.YELLOW, TrafficLightColor.RED];
-    private colorIndex: number = 0;
+    private colorIndex: number = 2;
 
     constructor(private readonly counter: Observable<number>) {
 
@@ -46,6 +46,16 @@ export class TrafficLight {
         );
     }
 
+    public get observableNextColor(): Observable<TrafficLightColor> {
+        return this.activeLight.pipe(
+            map(() => this.nextColor),
+        );
+    }
+
+    private get nextColor(): TrafficLightColor {
+        return this.colorPresets[(this.colorIndex + 1) % this.colorPresets.length];
+    }
+
     public setLightColor(color: TrafficLightColor) {
         switch (color) {
             case TrafficLightColor.RED:
@@ -64,17 +74,42 @@ export class TrafficLight {
         this.setColorIndex((this.colorIndex + 1) % this.colorPresets.length);
     }
 
-    // public circulateToRed() {
-    //     if (this.currentColor === TrafficLightColor.RED) { return; }
-    //     this.setNextColor();
-    //     if (this.currentColor === TrafficLightColor.GREEN) { return; }
-    //     setTimeout(() => {
-    //         this.setNextColor();
-    //     }, 3000);
-    // }
+    public setColorToRed() {
+        switch (this.calculateChangeTime(TrafficLightColor.RED)) {
+            case 1:
+                this.addCountdownQueue(3);
+            case 2:
+                this.addCountdownQueue([0, 3]);
+        }
+    }
+
+    public addCountdownQueue(countdown: number | number[]) {
+        if (typeof countdown === 'number') {
+            this.changeColorCountdown.push(countdown);
+        } else {
+            this.changeColorCountdown.push(...countdown);
+        }
+    }
+
+    private calculateChangeTime(destinationColor: TrafficLightColor): number {
+        let order = this.colorPresets.length;
+        switch (destinationColor) {
+            case TrafficLightColor.GREEN:
+                order += 1;
+                break;
+            case TrafficLightColor.YELLOW:
+                order += 2;
+                break;
+            case TrafficLightColor.RED:
+                order += 0;
+                break;
+        }
+        return order - this.colorIndex;
+    }
 
     private setColorIndex(index: number) {
         this.colorIndex = index;
         this.activeLightSubject.next(this.colorPresets[index]);
     }
+
 }

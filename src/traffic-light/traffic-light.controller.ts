@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param, ParseIntPipe } from '@nestjs/common';
 import { TrafficLightService } from './traffic-light.service';
-import { ChangeTrafficLightDto, ChangeIRStateDto } from './traffic-light.dto';
+import { ChangeTrafficLightDto, ChangeIRStateDto, TrafficLightCountdownDto } from './traffic-light.dto';
 
 @Controller('traffic-light')
 export class TrafficLightController {
@@ -24,7 +24,12 @@ export class TrafficLightController {
 
     @Post('change-ir-state/:index')
     public async changeIRState(@Param('index', new ParseIntPipe()) index: number, @Body() body: ChangeIRStateDto) {
-        this.trafficLightService.changeIRState(index, body.state);
+        this.trafficLightService.changeIRState(index, +body.state);
+    }
+
+    @Post('add-light-countdown/:index')
+    public async addLightCountdown(@Param('index', new ParseIntPipe()) index: number, @Body() body: TrafficLightCountdownDto) {
+        this.trafficLightService.addTrafficLightCountdownOnIndex(index, +body.countdown);
     }
 
     // @Post('circulate-to-red/:index')

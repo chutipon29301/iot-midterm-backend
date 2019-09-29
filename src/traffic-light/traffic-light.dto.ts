@@ -6,5 +6,10 @@ export class ChangeTrafficLightDto {
 
 // tslint:disable-next-line: max-classes-per-file
 export class ChangeIRStateDto {
-    state: number;
+    state: string;
+}
+
+// tslint:disable-next-line: max-classes-per-file
+export class TrafficLightCountdownDto {
+    countdown: string;
 }
