@@ -13,23 +13,28 @@ export class TrafficLightController {
     }
 
     @Post('change-light/:index')
-    public async changeTrafficLightColor(@Param('index', new ParseIntPipe()) index: number, @Body() body: ChangeTrafficLightDto) {
+    public changeTrafficLightColor(@Param('index', new ParseIntPipe()) index: number, @Body() body: ChangeTrafficLightDto) {
         this.trafficLightService.changeLightColor(index, body.color);
     }
 
     @Post('next-color/:index')
-    public async nextTrafficLightColor(@Param('index', new ParseIntPipe()) index: number) {
+    public nextTrafficLightColor(@Param('index', new ParseIntPipe()) index: number) {
         this.trafficLightService.setNextColorOnIndex(index);
     }
 
     @Post('change-ir-state/:index')
-    public async changeIRState(@Param('index', new ParseIntPipe()) index: number, @Body() body: ChangeIRStateDto) {
+    public changeIRState(@Param('index', new ParseIntPipe()) index: number, @Body() body: ChangeIRStateDto) {
         this.trafficLightService.changeIRState(index, +body.state);
     }
 
     @Post('add-light-countdown/:index')
-    public async addLightCountdown(@Param('index', new ParseIntPipe()) index: number, @Body() body: TrafficLightCountdownDto) {
+    public addLightCountdown(@Param('index', new ParseIntPipe()) index: number, @Body() body: TrafficLightCountdownDto) {
         this.trafficLightService.addTrafficLightCountdownOnIndex(index, +body.countdown);
+    }
+
+    @Post('set-red/:index')
+    public setTrafficLightColorToRed(@Param('index', new ParseIntPipe()) index: number) {
+        this.trafficLightService.setTrafficLightColorToRedOnIndex(index);
     }
 
     // @Post('circulate-to-red/:index')

@@ -59,13 +59,13 @@ export class TrafficLight {
     public setLightColor(color: TrafficLightColor) {
         switch (color) {
             case TrafficLightColor.RED:
-                this.setColorIndex(0);
+                this.setColorIndex(2);
                 break;
             case TrafficLightColor.YELLOW:
                 this.setColorIndex(1);
                 break;
             case TrafficLightColor.GREEN:
-                this.setColorIndex(2);
+                this.setColorIndex(0);
                 break;
         }
     }
@@ -78,8 +78,10 @@ export class TrafficLight {
         switch (this.calculateChangeTime(TrafficLightColor.RED)) {
             case 1:
                 this.addCountdownQueue(3);
+                break;
             case 2:
                 this.addCountdownQueue([0, 3]);
+                break;
         }
     }
 
@@ -92,19 +94,13 @@ export class TrafficLight {
     }
 
     private calculateChangeTime(destinationColor: TrafficLightColor): number {
-        let order = this.colorPresets.length;
-        switch (destinationColor) {
-            case TrafficLightColor.GREEN:
-                order += 1;
-                break;
-            case TrafficLightColor.YELLOW:
-                order += 2;
-                break;
-            case TrafficLightColor.RED:
-                order += 0;
-                break;
+        const destinationIndex = this.colorPresets.findIndex(o => o === destinationColor);
+        const diff = destinationIndex - this.colorIndex;
+        if (diff < 0) {
+            return diff + this.colorPresets.length;
+        } else {
+            return diff;
         }
-        return order - this.colorIndex;
     }
 
     private setColorIndex(index: number) {

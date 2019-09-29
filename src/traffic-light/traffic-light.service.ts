@@ -91,6 +91,10 @@ export class TrafficLightService implements OnModuleInit, OnGatewayConnection {
         this.trafficLights[index].addCountdownQueue(countdown);
     }
 
+    public setTrafficLightColorToRedOnIndex(index: number) {
+        this.trafficLights[index].setColorToRed();
+    }
+
     // public setGreenLightOnIndex(index: number) {
     //     for (let i = 0; i < this.trafficLights.length; i++) {
     //         if (i === index) {
