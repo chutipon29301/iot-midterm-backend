@@ -27,8 +27,13 @@ export class TrafficLightController {
         this.trafficLightService.changeIRState(index, body.state);
     }
 
-    @Get('ping-mqtt')
-    public async sendPingMqttMessage() {
-        await this.trafficLightService.sendPingMqttMessage();
-    }
+    // @Post('circulate-to-red/:index')
+    // public async circulateTrafficAtIndexToRed(@Param('index', new ParseIntPipe()) index: number) {
+    //     this.trafficLightService.circulateToRedLightOnIndex(index);
+    // }
+
+    // @Post('set-green-light/:index')
+    // public async setGreenTrafficLightColor(@Param('index', new ParseIntPipe()) index: number) {
+    //     this.trafficLightService.setGreenLightOnIndex(index);
+    // }
 }

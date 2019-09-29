@@ -4,6 +4,6 @@ import { TrafficLightController } from './traffic-light.controller';
 
 @Module({
   providers: [TrafficLightService],
-  controllers: [TrafficLightController]
+  controllers: [TrafficLightController],
 })
 export class TrafficLightModule {}
