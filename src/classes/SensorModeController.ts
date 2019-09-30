@@ -48,6 +48,15 @@ export class SensorModeController {
         }
     }
 
+    public clear() {
+        for (const trafficLight of this.trafficLights) {
+            trafficLight.reset();
+        }
+        for (const timeout of this.timeouts) {
+            clearTimeout(timeout);
+        }
+    }
+
     private setCoolDown() {
         this.coolDown = true;
         setTimeout(() => {

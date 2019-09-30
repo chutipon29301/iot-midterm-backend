@@ -20,4 +20,10 @@ export class AutoModeController {
             },
         });
     }
+
+    public clear() {
+        for (const trafficLight of this.trafficLights) {
+            trafficLight.reset();
+        }
+    }
 }
