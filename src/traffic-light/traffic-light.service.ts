@@ -83,8 +83,12 @@ export class TrafficLightService implements OnModuleInit, OnGatewayConnection {
         });
         this.mode.subscribe({
             next: (mode: TrafficLightSystemMode) => {
-                this.autoModeController.clear();
-                this.sensorModeController.clear();
+                if (this.autoModeController) {
+                    this.autoModeController.clear();
+                }
+                if (this.sensorModeController) {
+                    this.sensorModeController.clear();
+                }
                 switch (mode) {
                     case TrafficLightSystemMode.MANUAL:
                         for (const trafficLight of this.trafficLights) {
