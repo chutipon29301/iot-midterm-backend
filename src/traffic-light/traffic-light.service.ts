@@ -90,6 +90,9 @@ export class TrafficLightService implements OnModuleInit, OnGatewayConnection {
                         }
                         break;
                     case TrafficLightSystemMode.AUTO:
+                        this.manualModeController = null;
+                        this.autoModeController = new AutoModeController(this.trafficLights, this.counter);
+                        this.sensorModeController = null;
                         break;
                     case TrafficLightSystemMode.SENSOR:
                         this.manualModeController = null;
