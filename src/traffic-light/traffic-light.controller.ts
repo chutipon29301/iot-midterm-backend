@@ -29,7 +29,12 @@ export class TrafficLightController {
 
     @Post('change-ir-state/:index')
     public changeIRState(@Param('index', new ParseIntPipe()) index: number, @Body() body: ChangeIRStateDto) {
-        this.trafficLightService.changeIRState(index, +body.state);
+        const status = +body.state;
+        if (status === 0) {
+            this.trafficLightService.changeIRState(index, 1);
+        } else {
+            this.trafficLightService.changeIRState(index, 0);
+        }
     }
 
     @Post('add-light-countdown/:index')
