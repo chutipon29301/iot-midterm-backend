@@ -11,6 +11,9 @@ import {
     SOCKET_ON_COUNTER_CHANGE,
 } from '../constant';
 import { auditTime } from 'rxjs/operators';
+import { SensorModeController } from '../classes/SensorModeController';
+import { ManualModeController } from '../classes/ManualModeController';
+import { AutoModeController } from '../classes/AutoModeController';
 
 export enum TrafficLightSystemMode {
     AUTO = 'AUTO',
@@ -43,6 +46,9 @@ export class TrafficLightService implements OnModuleInit, OnGatewayConnection {
         new BehaviorSubject(false),
     ];
     private mode: BehaviorSubject<TrafficLightSystemMode> = new BehaviorSubject<TrafficLightSystemMode>(TrafficLightSystemMode.MANUAL);
+    private manualModeController: ManualModeController = null;
+    private sensorModeController: SensorModeController = null;
+    private autoModeController: AutoModeController = null;
 
     private get observableTrafficLightColors(): Observable<TrafficLightColor[]> {
         return combineLatest(this.trafficLights.map(o => o.activeLight));
@@ -86,6 +92,9 @@ export class TrafficLightService implements OnModuleInit, OnGatewayConnection {
                     case TrafficLightSystemMode.AUTO:
                         break;
                     case TrafficLightSystemMode.SENSOR:
+                        this.manualModeController = null;
+                        this.autoModeController = null;
+                        this.sensorModeController = new SensorModeController(this.trafficLights, this.irStates);
                         break;
                 }
             },
