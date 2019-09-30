@@ -1,14 +1,15 @@
 import { TrafficLight } from './TrafficLight';
-import { Observable } from 'rxjs';
+import { Observable, Subscriber, Subscription } from 'rxjs';
 
 export class AutoModeController {
     private lightTimeouts: number[] = [30, 30, 30, 30];
     private index: number = 0;
     private counter: number = 0;
+    private subscription: Subscription = null;
 
     constructor(private readonly trafficLights: TrafficLight[], interval: Observable<number>) {
         trafficLights[this.index].setColorToGreen();
-        interval.subscribe({
+        this.subscription = interval.subscribe({
             next: () => {
                 this.counter++;
                 if (this.counter === this.lightTimeouts[this.index]) {
@@ -22,6 +23,7 @@ export class AutoModeController {
     }
 
     public clear() {
+        this.subscription.unsubscribe();
         for (const trafficLight of this.trafficLights) {
             trafficLight.reset();
         }
