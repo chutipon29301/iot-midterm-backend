@@ -88,6 +88,9 @@ export class TrafficLightService implements OnModuleInit, OnGatewayConnection {
                         for (const trafficLight of this.trafficLights) {
                             trafficLight.reset();
                         }
+                        this.manualModeController = null;
+                        this.autoModeController = null;
+                        this.sensorModeController = null;
                         break;
                     case TrafficLightSystemMode.AUTO:
                         this.manualModeController = null;

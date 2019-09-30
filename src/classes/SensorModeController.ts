@@ -10,7 +10,7 @@ export class SensorModeController {
 
     constructor(
         private readonly trafficLights: TrafficLight[],
-        private readonly irSensors: Array<BehaviorSubject<boolean>>,
+        irSensors: Array<BehaviorSubject<boolean>>,
     ) {
         for (let i = 0; i < this.trafficLights.length; i++) {
             if (this.majorTrafficLight.indexOf(i) !== -1) {
